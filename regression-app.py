@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 import streamlit as st
-import pickle
+# import pickle
 from PIL import Image
 from rdkit import Chem
 from rdkit.Chem import Descriptors, Lipinski
@@ -124,7 +124,7 @@ def IC50(input):
     return i
 
 # Load the model
-load_model = pickle.load(open("rfmodel.pkl", "rb"))
+load_model = pd.read_pickle("rfmodel.pkl")
 
 st.header("Predicted Value")
 
