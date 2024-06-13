@@ -77,32 +77,25 @@ def lipinski(smiles):
     baseData = np.array([])  # Initialize an empty array 
 
     for mol in moldata:
-        try:
-            desc_MolWt = Descriptors.MolWt(mol)
-            desc_MolLogP = Descriptors.MolLogP(mol)
-            desc_NumHDonors = Lipinski.NumHDonors(mol)
-            desc_NumHAcceptors = Lipinski.NumHAcceptors(mol)
-            
-            row = np.array([desc_MolWt, desc_MolLogP, desc_NumHDonors, desc_NumHAcceptors]).reshape(1, -1)  # Reshape row to have 1 row and 4 columns
-
-            if i == 0:
-                baseData = row
-            else:
-                baseData = np.vstack([baseData, row])
-            
-            i += 1
-
-        except TypeError as e:
-            print("Kindly put in a proper chemical compound")
-            break
-            
-        columnNames = ["MW", "LogP", "NumHDonors", "NumHAcceptors"]
-        descriptors = pd.DataFrame(data = baseData, columns = columnNames)
-
+        desc_MolWt = Descriptors.MolWt(mol)
+        desc_MolLogP = Descriptors.MolLogP(mol)
+        desc_NumHDonors = Lipinski.NumHDonors(mol)
+        desc_NumHAcceptors = Lipinski.NumHAcceptors(mol)
         
+        row = np.array([desc_MolWt, desc_MolLogP, desc_NumHDonors, desc_NumHAcceptors]).reshape(1, -1)  # Reshape row to have 1 row and 4 columns
 
-        return descriptors
+        if i == 0:
+            baseData = row
+        else:
+            baseData = np.vstack([baseData, row])
         
+        i += 1
+
+    columnNames = ["MW", "LogP", "NumHDonors", "NumHAcceptors"]
+    descriptors = pd.DataFrame(data = baseData, columns = columnNames)
+
+    return descriptors
+
 df_lipinski = lipinski(df.canonical_smiles)
 
 # combine the dataframes of the molecular descriptors and the original data
