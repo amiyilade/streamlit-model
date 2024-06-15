@@ -1,4 +1,5 @@
 import numpy as np
+import os
 import pandas as pd
 import streamlit as st
 # import pickle
@@ -94,6 +95,8 @@ def lipinski(smiles):
     columnNames = ["MW", "LogP", "NumHDonors", "NumHAcceptors"]
     descriptors = pd.DataFrame(data = baseData, columns = columnNames)
 
+    os.remove('molecule.smi')
+
     return descriptors
 
 df_lipinski = lipinski(df.canonical_smiles)
@@ -125,6 +128,9 @@ def IC50(input):
 
 # Load the model
 load_model = pd.read_pickle("rfmodel.pkl")
+
+# st.balloons()
+# st.snow()
 
 st.header("Predicted Value")
 
