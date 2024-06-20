@@ -98,12 +98,8 @@ if selected == 'AChE Inhibitor Prediction model using pubchemfingerprints':
             load_data.to_csv('molecule.smi', sep='\t',
                              header=False, index=False)
 
-            st.header('**Original input data**')
+            st.header('**Input SMILES**')
             st.write(load_data)
-
-
-            desc_calc()
-
             @dataclass
             class Program:
                 progress: int = 0
@@ -117,22 +113,37 @@ if selected == 'AChE Inhibitor Prediction model using pubchemfingerprints':
 
             p = Program()
 
+            desc_calc()
+
+            # @dataclass
+            # class Program:
+            #     progress: int = 0
+
+            #     def increment(self):
+            #         self.progress += 1
+            #         sleep(0.01)
+
+
+            # my_bar = st.progress(0, text="Prediction in progress. Please wait.")
+
+            # p = Program()
+
             while p.progress < 100:
                 p.increment()
                 my_bar.progress(p.progress, text=f"Prediction in progress: {p.progress}%")
+            
+            my_bar.empty()
 
             # Read in calculated descriptors and display the dataframe
-            st.header('**Calculated molecular descriptors**')
+            st.header('**Compound\'s Computed Descriptors**')
             desc = pd.read_csv('descriptors_output.csv')
             st.write(desc)
-            st.write(desc.shape)
 
             # Read descriptor list used in previously built model
-            st.header('**Subset of descriptors from previously built models**')
+            st.header('**Selection of Compound\'s Computed Descriptors**')
             Xlist = list(pd.read_csv('features.csv').columns)
             desc_subset = desc[Xlist]
             st.write(desc_subset)
-            st.write(desc_subset.shape)
 
             # Apply trained model to make prediction on query compounds
             build_model(desc_subset)
