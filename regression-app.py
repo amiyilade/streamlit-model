@@ -95,8 +95,6 @@ def lipinski(smiles):
     columnNames = ["MW", "LogP", "NumHDonors", "NumHAcceptors"]
     descriptors = pd.DataFrame(data = baseData, columns = columnNames)
 
-    os.remove('molecule.smi')
-
     return descriptors
 
 df_lipinski = lipinski(df.canonical_smiles)
