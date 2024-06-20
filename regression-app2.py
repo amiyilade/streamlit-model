@@ -10,6 +10,9 @@ from PIL import Image
 from rdkit import Chem
 from rdkit.Chem import Descriptors, Lipinski
 import subprocess
+import time
+from dataclasses import dataclass
+from time import sleep
 
 # The App
 
@@ -98,8 +101,25 @@ if selected == 'AChE Inhibitor Prediction model using pubchemfingerprints':
             st.header('**Original input data**')
             st.write(load_data)
 
-            with st.spinner("Calculating descriptors..."):
-                desc_calc()
+
+            desc_calc()
+
+            @dataclass
+            class Program:
+                progress: int = 0
+
+                def increment(self):
+                    self.progress += 1
+                    sleep(0.01)
+
+
+            my_bar = st.progress(0, text="Prediction in progress. Please wait.")
+
+            p = Program()
+
+            while p.progress < 100:
+                p.increment()
+                my_bar.progress(p.progress, text=f"Prediction in progress: {p.progress}%")
 
             # Read in calculated descriptors and display the dataframe
             st.header('**Calculated molecular descriptors**')
@@ -117,5 +137,5 @@ if selected == 'AChE Inhibitor Prediction model using pubchemfingerprints':
             # Apply trained model to make prediction on query compounds
             build_model(desc_subset)
         else:
-            st.warning('Please upload an input file.') 
+            st.warning('Please provide an input.') 
             
