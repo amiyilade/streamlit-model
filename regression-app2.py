@@ -25,7 +25,7 @@ Dataset obtained from [ChEMBL database](https://www.ebi.ac.uk/chembl/g/#search_r
 # loading the saved models
 ache_model = pickle.load(open('rfmodel.pkl', 'rb'))
 # Update this to BChE when available
-bche_model = pickle.load(open('rfmodel.pkl', 'rb'))
+bche_model = pickle.load(open('rf_bchemodel.pkl', 'rb'))
 
 # Define the tabs
 tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs(['Main', 'What is AChE?', 'What is BChE?', 'Dataset', 'Model performance', 'Python libraries', 'Citing me'])
@@ -57,8 +57,9 @@ with tab4:
         """)
     
 with tab5:
-    st.write("""The model used was a Random Forest Regressor with an R-Squared of 0.2834 with an accuracy of 82.96%. 
-             There is much room for improvement and further research.
+    st.write("""The models used for the targets were Random Forest Regressors. The model for AChE had an R-Squared 
+             of 0.2834 with an accuracy of 82.96%. The model for BChE had an R-Squared of 0.3724 with an accuracy 
+             of 84.63%. There is much room for improvement and further research.
         """) 
 
 with tab6:
@@ -153,16 +154,21 @@ if uploaded_file is not None:
         desc = pd.read_csv('descriptors_output.csv')
         st.write(desc)
 
-        # Read descriptor list used in previously built model
         st.header('**Selection of Compound\'s Computed Descriptors**')
-        Xlist = list(pd.read_csv('features.csv').columns)
-        desc_subset = desc[Xlist]
-        st.write(desc_subset)
-
-        # Apply trained model to make prediction on query compounds
+        
         if selected == 'AChE Inhibitor Prediction model using pubchemfingerprints':
+            Xlist = list(pd.read_csv('features.csv').columns)
+            desc_subset = desc[Xlist]
+            st.write(desc_subset)
+            # Apply trained model to make prediction on query compounds
             build_model(ache_model, desc_subset, load_data.iloc[:, 0])
+            
         elif selected == 'BChE Inhibitor Prediction model using pubchemfingerprints':
+            Xlist = list(pd.read_csv('bche_features.csv').columns)
+            desc_subset = desc[Xlist]
+            st.write(desc_subset)
+            # Apply trained model to make prediction on query compounds
             build_model(bche_model, desc_subset, load_data.iloc[:, 0])
+
 else:
     st.warning('Please upload a CSV file.')
